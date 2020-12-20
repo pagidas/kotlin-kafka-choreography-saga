@@ -1,9 +1,9 @@
 package org.example
 
 import org.example.kafka.KConsumer
-import org.example.kafka.KProducer
+import org.example.kafka.OrderProducer
 
 fun main() {
-    KProducer()
+    OrderProducer
     KConsumer()
 }
