@@ -1,0 +1,65 @@
+plugins {
+    id 'java-library'
+    id 'org.jetbrains.kotlin.jvm' version "$kotlinVersion"
+    id 'com.github.johnrengelman.shadow' version "$shadowJarPluginVersion"
+    id "com.commercehub.gradle.plugin.avro" version "$avroPluginVersion"
+}
+
+group 'org.example'
+version '1.0'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    jcenter()
+    maven { url 'https://packages.confluent.io/maven/' }
+}
+
+dependencies {
+    // kotlin
+    implementation platform("org.jetbrains.kotlin:kotlin-bom")
+    implementation "org.jetbrains.kotlin:kotlin-stdlib"
+    implementation "org.jetbrains.kotlin:kotlin-reflect"
+
+    // http4k
+    implementation platform("org.http4k:http4k-bom:$http4kVersion")
+    implementation "org.http4k:http4k-core"
+    implementation "org.http4k:http4k-format-jackson"
+    implementation "org.http4k:http4k-contract"
+    implementation "org.http4k:http4k-server-jetty"
+
+    // Kafka
+    implementation "org.apache.kafka:kafka_2.13:$kafkaVersion"
+    implementation "io.confluent:kafka-avro-serializer:$kafkaAvroSerliazer"
+
+    // Slf4JLogging
+    implementation "org.slf4j:slf4j-api:$slf4jVersion"
+    implementation "org.slf4j:slf4j-simple:$slf4jVersion"
+
+    // TypesafeConfig
+    implementation "com.typesafe:config:$typesafeVersion"
+
+    // Logback
+    compile "ch.qos.logback:logback-core:$logbackVersion"
+    runtimeOnly "ch.qos.logback:logback-classic:$logbackVersion"
+}
+
+shadowJar {
+    mergeServiceFiles()
+}
+
+avro {
+    createSetters = false
+    fieldVisibility = "PRIVATE"
+}
+
+sourceSets {
+    main.java.srcDirs += 'build/generated-main-avro-java'
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "11"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "11"
+}
