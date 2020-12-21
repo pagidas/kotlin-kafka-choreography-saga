@@ -1,0 +1,19 @@
+plugins {
+    id "com.commercehub.gradle.plugin.avro" version "$avroPluginVersion"
+}
+
+dependencies {
+    implementation "org.apache.avro:avro:$avroVersion"
+}
+
+avro {
+    createSetters = false
+    fieldVisibility = "PRIVATE"
+}
+
+sourceSets {
+    main.java.srcDirs += 'build/generated-main-avro-java'
+}
+
+sourceCompatibility = 11
+targetCompatibility = 11

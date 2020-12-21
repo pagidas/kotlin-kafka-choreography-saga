@@ -1,1 +1,3 @@
-rootProject.name = 'kotlin-kafka-choreography-saga'
+include 'data-types'
+include 'orders'
+
