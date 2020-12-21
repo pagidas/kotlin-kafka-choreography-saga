@@ -12,7 +12,7 @@ object PantryEventsConsumer {
     private const val PANTRY_EVENTS_TOPIC = "pantry-events"
 
     init {
-        log.info("Initialising $this...")
+        log.info("Initialised $this...")
     }
 
     operator fun invoke() {

@@ -1,28 +1,34 @@
 package org.example.web
 
-import org.http4k.core.Method
-import org.http4k.core.Response
-import org.http4k.core.Status
+import org.example.model.Order
+import org.example.service.OrderService
+import org.http4k.core.*
+import org.http4k.format.Jackson.auto
 import org.http4k.routing.RoutingHttpHandler
 import org.http4k.routing.bind
 import org.http4k.routing.routes
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 object OrderController {
-    private val log by lazy { LoggerFactory.getLogger(this::class.java) }
+    private val log: Logger by lazy { LoggerFactory.getLogger(this::class.java) }
+
+    private val orderService = OrderService
 
     init {
-        log.info("Initialising $this...")
+        log.info("Initialised $this...")
     }
 
     val routes: RoutingHttpHandler by lazy {
         "/orders" bind routes(
-            createOrder()
+            createOrder
         )
     }
 
-    private fun createOrder(): RoutingHttpHandler =
+    private val createOrder: RoutingHttpHandler =
         "/" bind Method.POST to { req ->
-            Response(Status.OK)
+            val lens = Body.auto<Order>().toLens()
+            val created = orderService.createOrder(Order())
+            Response(Status.OK).with(lens of created)
         }
 }
