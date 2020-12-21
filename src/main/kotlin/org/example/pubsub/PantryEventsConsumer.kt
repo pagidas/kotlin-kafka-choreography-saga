@@ -1,4 +1,4 @@
-package org.example.kafka
+package org.example.pubsub
 
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.example.avro.order.events.OrderEvent
@@ -10,6 +10,10 @@ import java.time.temporal.ChronoUnit
 object PantryEventsConsumer {
     private val log: Logger by lazy { LoggerFactory.getLogger(this::class.java) }
     private const val PANTRY_EVENTS_TOPIC = "pantry-events"
+
+    init {
+        log.info("Initialising $this...")
+    }
 
     operator fun invoke() {
         val consumer = KafkaConsumer<String, OrderEvent>(consumerProperties).apply {

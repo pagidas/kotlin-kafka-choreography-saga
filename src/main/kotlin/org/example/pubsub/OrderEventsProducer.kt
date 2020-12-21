@@ -1,4 +1,4 @@
-package org.example.kafka
+package org.example.pubsub
 
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
@@ -12,6 +12,10 @@ object OrderEventsProducer {
     private const val ORDER_EVENTS_TOPIC = "order-events"
 
     private val producer = KafkaProducer<String, OrderEvent>(producerProperties)
+
+    init {
+        log.info("Initialising $this...")
+    }
 
     fun createOrder(order: Order) {
         val event = OrderEvent("OrderCreated", order.id.toString(), order.status.name)

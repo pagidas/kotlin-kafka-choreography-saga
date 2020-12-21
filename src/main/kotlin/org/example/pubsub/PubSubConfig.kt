@@ -1,4 +1,4 @@
-package org.example.kafka
+package org.example.pubsub
 
 import io.confluent.kafka.serializers.KafkaAvroDeserializer
 import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig
