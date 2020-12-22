@@ -1,7 +1,7 @@
-package org.example.service
+package org.example.orders.service
 
-import org.example.model.Order
-import org.example.pubsub.OrderEventsProducer
+import org.example.orders.model.Order
+import org.example.orders.pubsub.OrderEventsProducer
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 

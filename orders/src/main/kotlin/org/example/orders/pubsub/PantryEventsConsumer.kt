@@ -1,4 +1,4 @@
-package org.example.pubsub
+package org.example.orders.pubsub
 
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.example.avro.order.events.OrderEvent

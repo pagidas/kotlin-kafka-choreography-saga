@@ -1,4 +1,4 @@
-package org.example.model
+package org.example.orders.model
 
 import java.util.*
 

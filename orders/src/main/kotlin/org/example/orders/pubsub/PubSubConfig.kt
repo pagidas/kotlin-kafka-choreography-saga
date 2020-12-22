@@ -1,4 +1,4 @@
-package org.example.pubsub
+package org.example.orders.pubsub
 
 import com.typesafe.config.ConfigFactory
 import io.confluent.kafka.serializers.KafkaAvroDeserializer

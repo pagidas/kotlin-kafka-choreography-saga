@@ -1,7 +1,7 @@
-package org.example.web
+package org.example.orders.web
 
-import org.example.model.Order
-import org.example.service.OrderService
+import org.example.orders.model.Order
+import org.example.orders.service.OrderService
 import org.http4k.core.*
 import org.http4k.format.Jackson.auto
 import org.http4k.routing.RoutingHttpHandler
