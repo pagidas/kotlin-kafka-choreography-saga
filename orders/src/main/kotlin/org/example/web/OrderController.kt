@@ -25,6 +25,6 @@ object OrderController {
         "/" bind Method.POST to { _: Request ->
             val lens = Body.auto<Order>().toLens()
             val created = orderService.createOrder(Order())
-            Response(Status.OK).with(lens of created)
+            Response(Status.CREATED).with(lens of created)
         }
 }

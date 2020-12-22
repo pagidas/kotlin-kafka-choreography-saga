@@ -1,9 +1,8 @@
 package org.example.pantry.web
 
-import org.http4k.core.Method
-import org.http4k.core.Request
-import org.http4k.core.Response
-import org.http4k.core.Status
+import org.example.pantry.model.PantryItem
+import org.http4k.core.*
+import org.http4k.format.Jackson.auto
 import org.http4k.routing.RoutingHttpHandler
 import org.http4k.routing.bind
 import org.http4k.routing.routes
@@ -20,7 +19,14 @@ object PantryController {
     }
 
     private val createItem: RoutingHttpHandler =
-        "/" bind Method.POST to { _: Request ->
-            Response(Status.OK)
+        "/" bind Method.POST to { req: Request ->
+            val requestLens = Body.auto<CreatePantryItemRequest>().toLens()
+            val responseLens = Body.auto<PantryItem>().toLens()
+
+            val payload = requestLens(req)
+            val pantryItem = PantryItem(name = payload.name, quantityLimit = payload.quantityLimit)
+            // call service
+
+            Response(Status.CREATED).with(responseLens of pantryItem)
         }
 }
