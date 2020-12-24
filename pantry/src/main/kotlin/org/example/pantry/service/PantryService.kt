@@ -3,7 +3,7 @@ package org.example.pantry.service
 import org.example.avro.order.events.OrderEvent
 import org.example.pantry.exceptions.PantryItemQuantityLimitExceeded
 import org.example.pantry.model.PantryItem
-import org.example.pantry.pubsub.PantryProducer
+import org.example.pantry.pubsub.PantryEventsProducer
 import org.example.pantry.repository.PantryRepository
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -14,7 +14,7 @@ object PantryService {
     private val log: Logger by lazy { LoggerFactory.getLogger(this::class.java) }
 
     private val pantryRepo = PantryRepository
-    private val pantryProducer = PantryProducer
+    private val pantryProducer = PantryEventsProducer
 
     fun creditItemQuantity(createdOrderEvent: OrderEvent) {
         log.info("Attempt to credit item quantity")

@@ -10,7 +10,7 @@ import org.example.pantry.model.PantryEventType
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-object PantryProducer {
+object PantryEventsProducer {
     private val log: Logger by lazy { LoggerFactory.getLogger(this::class.java) }
     private const val PANTRY_EVENTS_TOPIC = "pantry-events"
 

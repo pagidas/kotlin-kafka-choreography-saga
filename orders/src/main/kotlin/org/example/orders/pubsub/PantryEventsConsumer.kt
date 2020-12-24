@@ -21,6 +21,11 @@ object PantryEventsConsumer {
             while (true) {
                 it.poll(Duration.of(100, ChronoUnit.MILLIS)).forEach { record ->
                     log.info("Consumed message ${record.value()}")
+                    TODO("""
+                        Consume:
+                            - PantryQuantityLimitCredited and approve the order (update db too)
+                            - PantryQuantityLimitRejected and reject the order (update db too)
+                    """.trimIndent())
                 }
             }
         }
