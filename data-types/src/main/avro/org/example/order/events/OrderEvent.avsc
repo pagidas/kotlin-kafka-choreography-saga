@@ -14,6 +14,14 @@
         {
             "name": "status",
             "type": "string"
+        },
+        {
+            "name": "pantryItemId",
+            "type": "string"
+        },
+        {
+            "name": "quantity",
+            "type": "int"
         }
     ]
 }

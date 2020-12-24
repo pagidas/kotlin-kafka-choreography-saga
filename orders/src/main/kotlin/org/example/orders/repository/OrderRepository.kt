@@ -3,12 +3,15 @@ package org.example.orders.repository
 import org.example.orders.model.Order
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.sql.Connection
 import java.util.*
 
 object OrderRepository {
     private val log: Logger by lazy { LoggerFactory.getLogger(this::class.java) }
 
     private val dbConnection = OrderDatabase.connection
+
+    private fun transaction(conn: Connection = dbConnection, fn: Connection.() -> Unit = {}) = conn.fn()
 
     fun insertOrder(order: Order) {
         val statement = dbConnection.createStatement()

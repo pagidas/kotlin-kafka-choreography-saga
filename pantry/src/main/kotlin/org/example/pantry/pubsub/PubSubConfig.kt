@@ -1,5 +1,6 @@
 package org.example.pantry.pubsub
 
+import com.typesafe.config.Config
 import com.typesafe.config.ConfigFactory
 import io.confluent.kafka.serializers.KafkaAvroDeserializer
 import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig
@@ -9,7 +10,7 @@ import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.kafka.common.serialization.StringSerializer
 
-private val config = ConfigFactory.load()
+val config: Config = ConfigFactory.load()
 private val kafkaConfig = config.getObject("kafka.broker").toConfig()
 private val schemaRegistryConfig = config.getObject("kafka.schema-registry").toConfig()
 
