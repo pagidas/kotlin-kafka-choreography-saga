@@ -1,0 +1,19 @@
+{
+    "type": "record",
+    "namespace": "org.example.avro.pantry.events",
+    "name": "PantryEvent",
+    "fields": [
+        {
+            "name": "type",
+            "type": "string"
+        },
+        {
+            "name": "pantryItemId",
+            "type": "string"
+        },
+        {
+            "name": "quantity",
+            "type": "int"
+        }
+    ]
+}

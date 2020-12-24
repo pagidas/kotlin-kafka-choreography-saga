@@ -4,7 +4,7 @@ import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.example.avro.order.events.OrderEvent
 import org.example.orders.model.Order
-import org.example.orders.model.OrderEventStatus
+import org.example.orders.model.OrderEventType
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -15,7 +15,11 @@ object OrderEventsProducer {
     private val producer = KafkaProducer<String, OrderEvent>(producerProperties)
 
     fun createOrder(order: Order) {
-        val event = OrderEvent(OrderEventStatus.OrderCreated.name, order.id.toString(), order.orderStatus.name)
+        val event = OrderEvent(OrderEventType.OrderCreated.name,
+            order.id.toString(),
+            order.orderStatus.name,
+            order.pantryItemId.toString(),
+            order.quantity)
         try {
             log.info("Pushing to topic: $ORDER_EVENTS_TOPIC message: $event")
             producer.send(ProducerRecord(ORDER_EVENTS_TOPIC, event.orderId, event))

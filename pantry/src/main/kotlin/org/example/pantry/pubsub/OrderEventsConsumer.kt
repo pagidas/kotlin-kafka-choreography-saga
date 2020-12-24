@@ -1,7 +1,6 @@
 package org.example.pantry.pubsub
 
 import org.apache.kafka.clients.consumer.KafkaConsumer
-import org.apache.kafka.common.TopicPartition
 import org.example.avro.order.events.OrderEvent
 import org.example.pantry.service.PantryService
 import org.slf4j.Logger
@@ -25,7 +24,7 @@ object OrderEventsConsumer {
             while (true) {
                 it.poll(Duration.of(100, ChronoUnit.MILLIS)).forEach { record ->
                     log.info("Consumed message ${record.value()}")
-                    pantryService.handleOrderCreatedEvent(record.value())
+                    pantryService.creditItemQuantity(record.value())
                 }
             }
         }

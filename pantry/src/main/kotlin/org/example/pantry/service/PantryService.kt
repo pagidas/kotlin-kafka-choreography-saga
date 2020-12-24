@@ -2,11 +2,12 @@ package org.example.pantry.service
 
 import org.example.avro.order.events.OrderEvent
 import org.example.pantry.exceptions.PantryItemQuantityLimitExceeded
-import org.example.pantry.exceptions.PantryItemNotFoundException
 import org.example.pantry.model.PantryItem
+import org.example.pantry.pubsub.PantryProducer
 import org.example.pantry.repository.PantryRepository
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.lang.RuntimeException
 import java.util.*
 
 object PantryService {
@@ -15,23 +16,19 @@ object PantryService {
     private val pantryRepo = PantryRepository
     private val pantryProducer = PantryProducer
 
-    fun handleOrderCreatedEvent(createdOrderEvent: OrderEvent) {
-        log.info("Attempt to credit item quantity limit")
+    fun creditItemQuantity(createdOrderEvent: OrderEvent) {
+        log.info("Attempt to credit item quantity")
         try {
             val item = pantryRepo.selectPantryItemById(UUID.fromString(createdOrderEvent.pantryItemId))
-            try {
-                item.creditQuantityLimit(createdOrderEvent.quantity)
-                // publish PantryItemQuantityLimitCredited event
-            } catch (e: PantryItemQuantityLimitExceeded) {
-                // publish rejected event message
-            }
-        } catch (e: PantryItemNotFoundException) {
-            // publish failed event message
+            item.checkQuantityLimit(createdOrderEvent.quantity)
+            pantryProducer.handleOrderCreatedEvent(createdOrderEvent)
+        } catch (e: RuntimeException) {
+            pantryProducer.handleOrderCreatedEvent(createdOrderEvent, e)
         }
     }
 
     @Throws(PantryItemQuantityLimitExceeded::class)
-    private fun PantryItem.creditQuantityLimit(orderQuantity: Int) {
+    private fun PantryItem.checkQuantityLimit(orderQuantity: Int) {
         if (quantityLimit - orderQuantity >= 0)
             return
         else
