@@ -22,9 +22,10 @@ object OrderController {
     }
 
     private val createOrder: RoutingHttpHandler =
-        "/" bind Method.POST to { _: Request ->
+        "/" bind Method.POST to { req: Request ->
             val lens = Body.auto<Order>().toLens()
-            val created = orderService.createOrder(Order())
+            val order = lens(req)
+            val created = orderService.createOrder(order)
             Response(Status.CREATED).with(lens of created)
         }
 }

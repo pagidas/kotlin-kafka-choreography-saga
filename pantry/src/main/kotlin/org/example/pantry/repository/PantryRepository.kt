@@ -5,7 +5,6 @@ import org.example.pantry.model.PantryItem
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.util.*
-import kotlin.jvm.Throws
 
 object PantryRepository {
     private val log: Logger by lazy { LoggerFactory.getLogger(this::class.java) }
@@ -14,18 +13,18 @@ object PantryRepository {
 
     @Throws(PantryItemNotFoundException::class)
     fun selectPantryItemById(id: UUID): PantryItem {
-        log.info("Attempt to select pantry item")
+        log.info("Attempt to select pantry item by id")
         val statement = dbConnection.createStatement()
         val result = statement.executeQuery("""
-            select all from pantry_app.items where id='$id' 
-        """.trimIndent())
+            select * from pantry_app.items where id='$id'
+            """.trimIndent())
 
         if (result.next())
             return PantryItem(
-                UUID.fromString(result.getString("id")),
+                result.getObject("id", UUID::class.java),
                 result.getString("name"),
-                result.getInt("quantity_limit")
-            )
-        throw PantryItemNotFoundException("Pantry Item by id: $id not found in the database")
+                result.getInt("quantity_limit"))
+            else
+                throw PantryItemNotFoundException("Pantry Item by id: $id not found in the database")
     }
 }
