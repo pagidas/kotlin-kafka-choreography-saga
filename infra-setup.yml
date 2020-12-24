@@ -58,3 +58,12 @@ services:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: pwd
       POSTGRES_DB: choreography_saga
+
+  db-migrations:
+    build: ./db-migrations
+    container_name: db-migrations
+    environment:
+      POSTGRES_URL: "jdbc:postgresql://postgres:5432/choreography_saga"
+    depends_on:
+      - postgres
+    restart: on-failure

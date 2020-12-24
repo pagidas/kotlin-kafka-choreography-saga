@@ -1,18 +1,18 @@
-package org.example.orders.repository
+package org.example.initdb
 
+import com.typesafe.config.ConfigFactory
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import org.example.orders.pubsub.config
+import org.flywaydb.core.Flyway
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.sql.Connection
 
-private val postgresConfig = config.getObject("postgres").toConfig()
+fun main() {
+    val log: Logger by lazy { LoggerFactory.getLogger("org.example.initdb.DbMigrations") }
 
-object OrderDatabase {
-    private val log: Logger by lazy { LoggerFactory.getLogger(this::class.java) }
+    val postgresConfig = ConfigFactory.load().getObject("postgres").toConfig()
 
-    private val datasource =
+    val datasource =
         HikariDataSource(
             HikariConfig().apply {
                 this.driverClassName = postgresConfig.getString("driver")
@@ -21,7 +21,12 @@ object OrderDatabase {
                 password = postgresConfig.getString("password")
                 validate()
             }
-    )
+        )
 
-    val connection: Connection = datasource.connection
+    log.info("Attempt to run migrations")
+    Flyway
+        .configure()
+        .dataSource(datasource)
+        .load()
+        .migrate()
 }
