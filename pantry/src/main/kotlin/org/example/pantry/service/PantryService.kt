@@ -21,6 +21,9 @@ object PantryService {
         try {
             val item = pantryRepo.selectPantryItemById(UUID.fromString(createdOrderEvent.pantryItemId))
             item.checkQuantityLimit(createdOrderEvent.quantity)
+            pantryRepo.updateQuantityLimit(
+                UUID.fromString(createdOrderEvent.pantryItemId),
+                createdOrderEvent.quantity)
             pantryProducer.handleOrderCreatedEvent(createdOrderEvent)
         } catch (e: RuntimeException) {
             pantryProducer.handleOrderCreatedEvent(createdOrderEvent, e)

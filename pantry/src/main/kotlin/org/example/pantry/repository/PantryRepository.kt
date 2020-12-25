@@ -27,4 +27,13 @@ object PantryRepository {
             else
                 throw PantryItemNotFoundException("Pantry Item by id: $id not found in the database")
     }
+
+    fun updateQuantityLimit(pantryItemId: UUID, quantity: Int) {
+        log.info("Attempt to update pantry item quantity limit")
+        dbConnection.createStatement().executeUpdate("""
+            update pantry_app.items
+            set quantity_limit = quantity_limit - $quantity
+            where id='$pantryItemId'
+        """.trimIndent())
+    }
 }

@@ -16,19 +16,25 @@ object OrderEventsProducer {
     private val producer = KafkaProducer<String, OrderEvent>(producerProperties)
 
     fun pushOrder(order: Order) {
-        val event = when(order.orderStatus) {
+        val event = when(order.status) {
             OrderStatus.PENDING -> OrderEvent(
                 OrderEventType.OrderCreated.name,
                 order.id.toString(),
-                order.orderStatus.name,
+                order.status.name,
                 order.pantryItemId.toString(),
-                order.quantity)
+                order.pantryItemQuantity)
             OrderStatus.REJECTED -> OrderEvent(
                 OrderEventType.OrderRejected.name,
                 order.id.toString(),
-                order.orderStatus.name,
+                order.status.name,
                 order.pantryItemId.toString(),
-                order.quantity)
+                order.pantryItemQuantity)
+            OrderStatus.APPROVED -> OrderEvent(
+                OrderEventType.OrderApproved.name,
+                order.id.toString(),
+                order.status.name,
+                order.pantryItemId.toString(),
+                order.pantryItemQuantity)
             else -> return
         }
         try {

@@ -2,6 +2,7 @@ package org.example.pantry.pubsub
 
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.example.avro.order.events.OrderEvent
+import org.example.pantry.model.OrderEventType
 import org.example.pantry.service.PantryService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -22,7 +23,9 @@ object OrderEventsConsumer {
 
         consumer.use {
             while (true) {
-                it.poll(Duration.of(100, ChronoUnit.MILLIS)).forEach { record ->
+                it.poll(Duration.of(100, ChronoUnit.MILLIS))
+                    .filter { record -> record.value().type.contentEquals(OrderEventType.OrderCreated.name) }
+                    .forEach { record ->
                     log.info("Consumed message ${record.value()}")
                     pantryService.creditItemQuantity(record.value())
                 }

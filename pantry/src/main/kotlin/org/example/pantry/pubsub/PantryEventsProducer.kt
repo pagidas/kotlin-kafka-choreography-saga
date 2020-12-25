@@ -22,22 +22,26 @@ object PantryEventsProducer {
             when(e) {
                 is PantryItemNotFoundException -> PantryEvent(
                     PantryEventType.PantryItemQuantityLimitFailed.name,
+                    orderCreatedEvent.orderId,
                     orderCreatedEvent.pantryItemId,
                     orderCreatedEvent.quantity
                 )
                 is PantryItemQuantityLimitExceeded -> PantryEvent(
                     PantryEventType.PantryItemQuantityLimitRejected.name,
+                    orderCreatedEvent.orderId,
                     orderCreatedEvent.pantryItemId,
                     orderCreatedEvent.quantity
                 )
                 else -> PantryEvent(
                     PantryEventType.PantryItemQuantityLimitFailed.name,
+                    orderCreatedEvent.orderId,
                     orderCreatedEvent.pantryItemId,
                     orderCreatedEvent.quantity
                 )
             }
         } ?: PantryEvent( // successful scenario
             PantryEventType.PantryItemQuantityLimitCredited.name,
+            orderCreatedEvent.orderId,
             orderCreatedEvent.pantryItemId,
             orderCreatedEvent.quantity)
         try {

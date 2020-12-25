@@ -12,6 +12,6 @@ enum class PantryEventType {
 
 data class Order(
     val id: UUID = UUID.randomUUID(),
-    val orderStatus: OrderStatus = OrderStatus.PENDING,
+    val status: OrderStatus = OrderStatus.PENDING,
     val pantryItemId: UUID,
-    val quantity: Int)
+    val pantryItemQuantity: Int)

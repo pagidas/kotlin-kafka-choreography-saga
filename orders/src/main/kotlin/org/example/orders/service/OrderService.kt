@@ -1,5 +1,6 @@
 package org.example.orders.service
 
+import org.example.avro.pantry.events.PantryEvent
 import org.example.orders.exceptions.PantryItemNotFoundException
 import org.example.orders.model.Order
 import org.example.orders.model.OrderStatus
@@ -7,6 +8,7 @@ import org.example.orders.pubsub.OrderEventsProducer
 import org.example.orders.repository.OrderRepository
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.util.*
 
 object OrderService {
     private val log: Logger by lazy { LoggerFactory.getLogger(this::class.java) }
@@ -20,8 +22,20 @@ object OrderService {
             orderRepo.insertOrder(order)
             orderProducer.pushOrder(order)
         } catch (e: PantryItemNotFoundException) {
-            return order.copy(orderStatus = OrderStatus.FAILED)
+            return order.copy(status = OrderStatus.FAILED)
         }
         return order
+    }
+
+    fun approveOrder(pantryEvent: PantryEvent) {
+        log.info("Attempt to approve the order")
+        val updated = orderRepo.updateOrderStatus(UUID.fromString(pantryEvent.orderId), OrderStatus.APPROVED)
+        orderProducer.pushOrder(updated)
+    }
+
+    fun rejectOrder(pantryEvent: PantryEvent) {
+        log.info("Attempt to reject the order")
+        val updated = orderRepo.updateOrderStatus(UUID.fromString(pantryEvent.orderId), OrderStatus.REJECTED)
+        orderProducer.pushOrder(updated)
     }
 }

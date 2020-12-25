@@ -24,7 +24,7 @@ object OrderController {
             val lens = Body.auto<Order>().toLens()
             val order = lens(req)
             val created = orderService.createOrder(order)
-            if (created.orderStatus == OrderStatus.FAILED)
+            if (created.status == OrderStatus.FAILED)
                 Response(Status.NOT_FOUND).withError("Pantry item id not found")
             else
                 Response(Status.CREATED).with(lens of created)

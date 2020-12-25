@@ -2,6 +2,7 @@ package org.example.pantry.model
 
 import java.util.*
 
+enum class OrderEventType { OrderCreated, OrderApproved, OrderRejected }
 enum class PantryEventType {
     PantryItemQuantityLimitCredited,
     PantryItemQuantityLimitFailed,

@@ -8,6 +8,10 @@
             "type": "string"
         },
         {
+            "name": "orderId",
+            "type": "string"
+        },
+        {
             "name": "pantryItemId",
             "type": "string"
         },
