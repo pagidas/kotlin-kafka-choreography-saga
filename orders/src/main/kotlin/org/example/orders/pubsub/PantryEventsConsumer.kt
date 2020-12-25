@@ -11,7 +11,7 @@ object PantryEventsConsumer {
     private val log: Logger by lazy { LoggerFactory.getLogger(this::class.java) }
     private const val PANTRY_EVENTS_TOPIC = "pantry-events"
 
-    operator fun invoke() {
+    init {
         val consumer = KafkaConsumer<String, OrderEvent>(consumerProperties).apply {
             subscribe(listOf(PANTRY_EVENTS_TOPIC))
             log.info("Subscribed to topic: $PANTRY_EVENTS_TOPIC")

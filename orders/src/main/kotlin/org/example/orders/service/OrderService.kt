@@ -7,7 +7,6 @@ import org.example.orders.pubsub.OrderEventsProducer
 import org.example.orders.repository.OrderRepository
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.sql.Connection
 
 object OrderService {
     private val log: Logger by lazy { LoggerFactory.getLogger(this::class.java) }
@@ -19,11 +18,9 @@ object OrderService {
         log.info("Attempt to create a new order")
         try {
             orderRepo.insertOrder(order)
-            orderProducer.createOrder(order)
+            orderProducer.pushOrder(order)
         } catch (e: PantryItemNotFoundException) {
-            val rejectedOrder = order.copy(orderStatus = OrderStatus.REJECTED)
-            orderProducer.createOrder(rejectedOrder)
-            return rejectedOrder
+            return order.copy(orderStatus = OrderStatus.FAILED)
         }
         return order
     }

@@ -15,7 +15,7 @@ object OrderEventsProducer {
 
     private val producer = KafkaProducer<String, OrderEvent>(producerProperties)
 
-    fun createOrder(order: Order) {
+    fun pushOrder(order: Order) {
         val event = when(order.orderStatus) {
             OrderStatus.PENDING -> OrderEvent(
                 OrderEventType.OrderCreated.name,
