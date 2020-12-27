@@ -28,6 +28,7 @@ object PantryEventsConsumer {
                     when(record.value().type) {
                         PantryEventType.PantryItemQuantityLimitCredited.name -> orderService.approveOrder(record.value())
                         PantryEventType.PantryItemQuantityLimitRejected.name -> orderService.rejectOrder(record.value())
+                        PantryEventType.PantryItemQuantityLimitFailed.name -> orderService.failOrder(record.value())
                     }
                 }
             }

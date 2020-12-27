@@ -21,8 +21,10 @@ object OrderService {
         try {
             orderRepo.insertOrder(order)
             orderProducer.pushOrder(order)
-        } catch (e: PantryItemNotFoundException) {
-            return order.copy(status = OrderStatus.FAILED)
+        } catch (e: RuntimeException) {
+            val failedOrder = order.copy(status = OrderStatus.FAILED)
+            orderProducer.pushOrder(failedOrder)
+            return failedOrder
         }
         return order
     }
@@ -36,6 +38,12 @@ object OrderService {
     fun rejectOrder(pantryEvent: PantryEvent) {
         log.info("Attempt to reject the order")
         val updated = orderRepo.updateOrderStatus(UUID.fromString(pantryEvent.orderId), OrderStatus.REJECTED)
+        orderProducer.pushOrder(updated)
+    }
+
+    fun failOrder(pantryEvent: PantryEvent) {
+        log.info("Attempt to fail the order")
+        val updated = orderRepo.updateOrderStatus(UUID.fromString(pantryEvent.orderId), OrderStatus.FAILED)
         orderProducer.pushOrder(updated)
     }
 }
