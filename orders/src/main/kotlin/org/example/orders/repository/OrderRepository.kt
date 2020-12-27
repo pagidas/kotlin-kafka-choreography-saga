@@ -1,9 +1,7 @@
 package org.example.orders.repository
 
-import org.example.orders.exceptions.PantryItemNotFoundException
 import org.example.orders.model.Order
 import org.example.orders.model.OrderStatus
-import org.postgresql.util.PSQLException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.sql.Connection
@@ -16,17 +14,12 @@ object OrderRepository {
 
     private fun transaction(conn: Connection = dbConnection, fn: Connection.() -> Unit = {}) = conn.fn()
 
-    @Throws(PantryItemNotFoundException::class)
     fun insertOrder(order: Order) {
         log.info("Attempt to insert order")
         transaction {
-            try {
-                createStatement().executeUpdate("""
-                insert into orders_app.orders values ('${order.id}', '${order.status.name}', '${order.pantryItemId}', '${order.pantryItemQuantity}')
-                """.trimIndent())
-            } catch (e: PSQLException) {
-                throw PantryItemNotFoundException(e.message)
-            }
+            createStatement().executeUpdate("""
+            insert into orders_app.orders values ('${order.id}', '${order.status.name}', '${order.pantryItemId}', '${order.pantryItemQuantity}')
+            """.trimIndent())
         }
     }
 

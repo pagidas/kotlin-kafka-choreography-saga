@@ -1,7 +1,5 @@
 package org.example.pantry.exceptions
 
-import java.lang.RuntimeException
-
 // Repo level exceptions
 data class PantryItemNotFoundException(override val message: String?) : RuntimeException(message)
 

@@ -1,7 +1,6 @@
 package org.example.orders.service
 
 import org.example.avro.pantry.events.PantryEvent
-import org.example.orders.exceptions.PantryItemNotFoundException
 import org.example.orders.model.Order
 import org.example.orders.model.OrderStatus
 import org.example.orders.pubsub.OrderEventsProducer
