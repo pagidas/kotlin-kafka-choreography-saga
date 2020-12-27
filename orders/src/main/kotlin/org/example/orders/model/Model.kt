@@ -2,8 +2,8 @@ package org.example.orders.model
 
 import java.util.*
 
-enum class OrderStatus { PENDING, APPROVED, FAILED, REJECTED }
-enum class OrderEventType { OrderCreated, OrderApproved, OrderRejected }
+enum class OrderStatus { PENDING, APPROVED, FAILED, REJECTED, RETRY }
+enum class OrderEventType { OrderCreated, OrderApproved, OrderRejected, OrderUpdated }
 enum class PantryEventType {
     PantryItemQuantityLimitCredited,
     PantryItemQuantityLimitFailed,

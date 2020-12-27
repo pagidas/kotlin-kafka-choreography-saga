@@ -24,7 +24,10 @@ object OrderEventsConsumer {
         consumer.use {
             while (true) {
                 it.poll(Duration.of(100, ChronoUnit.MILLIS))
-                    .filter { record -> record.value().type.contentEquals(OrderEventType.OrderCreated.name) }
+                    .filter { record ->
+                        record.value().type.contentEquals(OrderEventType.OrderCreated.name) ||
+                        record.value().type.contentEquals(OrderEventType.OrderUpdated.name)
+                    }
                     .forEach { record ->
                     log.info("Consumed message ${record.value()}")
                     pantryService.creditItemQuantity(record.value())

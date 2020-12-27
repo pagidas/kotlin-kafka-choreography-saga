@@ -5,6 +5,7 @@ import org.example.orders.model.Order
 import org.example.orders.model.OrderStatus
 import org.example.orders.pubsub.OrderEventsProducer
 import org.example.orders.repository.OrderRepository
+import org.example.orders.web.PatchOrderRequest
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.util.*
@@ -44,5 +45,11 @@ object OrderService {
         log.info("Attempt to fail the order")
         val updated = orderRepo.updateOrderStatus(UUID.fromString(pantryEvent.orderId), OrderStatus.FAILED)
         orderProducer.pushOrder(updated)
+    }
+
+    fun updateOrderQuantity(orderId: UUID, patch: PatchOrderRequest) {
+        log.info("Attempt to update order")
+        val updatedRetryOrder = orderRepo.updateOrderQuantity(orderId, patch.newPantryItemQuantity)
+        orderProducer.pushOrder(updatedRetryOrder)
     }
 }

@@ -17,24 +17,10 @@ object OrderEventsProducer {
 
     fun pushOrder(order: Order) {
         val event = when(order.status) {
-            OrderStatus.PENDING -> OrderEvent(
-                OrderEventType.OrderCreated.name,
-                order.id.toString(),
-                order.status.name,
-                order.pantryItemId.toString(),
-                order.pantryItemQuantity)
-            OrderStatus.REJECTED -> OrderEvent(
-                OrderEventType.OrderRejected.name,
-                order.id.toString(),
-                order.status.name,
-                order.pantryItemId.toString(),
-                order.pantryItemQuantity)
-            OrderStatus.APPROVED -> OrderEvent(
-                OrderEventType.OrderApproved.name,
-                order.id.toString(),
-                order.status.name,
-                order.pantryItemId.toString(),
-                order.pantryItemQuantity)
+            OrderStatus.PENDING -> orderPendingToOrderCreatedEvent(order)
+            OrderStatus.REJECTED -> orderRejectedToOrderRejectedEvent(order)
+            OrderStatus.APPROVED -> orderApprovedToOrderApprovedEvent(order)
+            OrderStatus.RETRY -> orderRetryToOrderUpdatedEvent(order)
             else -> return
         }
         try {
@@ -43,5 +29,42 @@ object OrderEventsProducer {
         } catch (e: Exception) {
             log.error("Error pushing event: $event")
         }
+    }
+
+    private val orderPendingToOrderCreatedEvent: (Order) -> OrderEvent = { o ->
+        OrderEvent(
+            OrderEventType.OrderCreated.name,
+            o.id.toString(),
+            o.status.name,
+            o.pantryItemId.toString(),
+            o.pantryItemQuantity
+        )
+    }
+
+    private val orderRejectedToOrderRejectedEvent: (Order) -> OrderEvent = { o ->
+        OrderEvent(
+            OrderEventType.OrderRejected.name,
+            o.id.toString(),
+            o.status.name,
+            o.pantryItemId.toString(),
+            o.pantryItemQuantity)
+    }
+
+    private val orderApprovedToOrderApprovedEvent: (Order) -> OrderEvent = { o ->
+        OrderEvent(
+            OrderEventType.OrderApproved.name,
+            o.id.toString(),
+            o.status.name,
+            o.pantryItemId.toString(),
+            o.pantryItemQuantity)
+    }
+
+    private val orderRetryToOrderUpdatedEvent: (Order) -> OrderEvent = { o ->
+        OrderEvent(
+            OrderEventType.OrderUpdated.name,
+            o.id.toString(),
+            o.status.name,
+            o.pantryItemId.toString(),
+            o.pantryItemQuantity)
     }
 }

@@ -44,4 +44,28 @@ object OrderRepository {
             result.getInt("pantry_item_quantity")
         )
     }
+
+    fun updateOrderQuantity(orderId: UUID, newPantryItemQuantity: Int): Order {
+        log.info("Attempt to update order pantry item quantity")
+        val result = dbConnection.createStatement().executeQuery(
+            """
+            with updated as (
+                update orders_app.orders
+                    set pantry_item_quantity=$newPantryItemQuantity,
+                        status='${OrderStatus.RETRY.name}'
+                    where id='$orderId'
+                returning *
+            )
+            select * from updated
+        """.trimIndent()
+        )
+        result.next()
+
+        return Order(
+            result.getObject("id", UUID::class.java),
+            OrderStatus.valueOf(result.getString("status")),
+            result.getObject("pantry_item_id", UUID::class.java),
+            result.getInt("pantry_item_quantity")
+        )
+    }
 }
