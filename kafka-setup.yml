@@ -1,0 +1,17 @@
+version: "3"
+
+networks:
+  choreography_saga:
+    name: choreography_saga
+
+services:
+  kafka-setup:
+    image: confluentinc/cp-kafka
+    hostname: kafka-setup
+    container_name: kafka-setup
+    volumes:
+      - ./scripts:/scripts
+    depends_on:
+      - broker
+      - schema-registry
+    command: sh /scripts/create_kafka_topics.sh
