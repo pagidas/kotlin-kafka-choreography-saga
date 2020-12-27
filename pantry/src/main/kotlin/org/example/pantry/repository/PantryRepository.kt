@@ -5,6 +5,7 @@ import org.example.pantry.model.PantryItem
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.util.*
+import kotlin.math.absoluteValue
 
 object PantryRepository {
     private val log: Logger by lazy { LoggerFactory.getLogger(this::class.java) }
@@ -35,5 +36,22 @@ object PantryRepository {
             set quantity_limit = quantity_limit - $quantity
             where id='$pantryItemId'
         """.trimIndent())
+    }
+
+    fun insertItem(pantryItem: PantryItem): PantryItem {
+        log.info("Attempt to insert pantry item")
+        val result = dbConnection.createStatement().executeQuery(
+            """
+            insert into pantry_app.items 
+            values ('${pantryItem.id}', '${pantryItem.name}', '${pantryItem.quantityLimit}')
+            returning *
+        """.trimIndent())
+        result.next()
+
+        return PantryItem(
+            result.getObject("id", UUID::class.java),
+            result.getString("name"),
+            result.getInt("quantity_limit")
+        )
     }
 }

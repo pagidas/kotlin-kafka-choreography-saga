@@ -36,4 +36,9 @@ object PantryService {
         else
             throw PantryItemQuantityLimitExceeded("Pantry item exceeded its quantity limit")
     }
+
+    fun createItem(pantryItem: PantryItem): PantryItem {
+        log.info("Attempt to create pantry item")
+        return pantryRepo.insertItem(pantryItem)
+    }
 }

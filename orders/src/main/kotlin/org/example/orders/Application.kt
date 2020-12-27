@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory
 
 fun main() {
     val log = LoggerFactory.getLogger("org.example.orders.Application")
-    log.info("Starting http4k app...")
+    log.info("Starting orders app...")
     OrderController.routes.asServer(Jetty()).start()
     PantryEventsConsumer
 }

@@ -15,7 +15,7 @@ object OrderEventsConsumer {
 
     private val pantryService = PantryService
 
-    operator fun invoke() {
+    init {
         val consumer = KafkaConsumer<String, OrderEvent>(consumerProperties).apply {
             subscribe(listOf(ORDER_EVENTS_TOPIC))
             log.info("Subscribed to topic: $ORDER_EVENTS_TOPIC")
@@ -29,9 +29,9 @@ object OrderEventsConsumer {
                         record.value().type.contentEquals(OrderEventType.OrderUpdated.name)
                     }
                     .forEach { record ->
-                    log.info("Consumed message ${record.value()}")
-                    pantryService.creditItemQuantity(record.value())
-                }
+                        log.info("Consumed message ${record.value()}")
+                        pantryService.creditItemQuantity(record.value())
+                    }
             }
         }
     }
