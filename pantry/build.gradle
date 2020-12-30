@@ -52,3 +52,12 @@ compileKotlin {
 compileTestKotlin {
     kotlinOptions.jvmTarget = "11"
 }
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'org.example.pantry.ApplicationKt'
+        )
+    }
+}
+

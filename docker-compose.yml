@@ -1,0 +1,37 @@
+version: '3'
+
+networks:
+  choreography_saga:
+    name: choreography_saga
+
+services:
+  orders:
+    build: ./orders
+    container_name: orders
+    hostname: orders
+    ports:
+      - "8000:8000"
+    environment:
+      KAFKA_URL: "broker:29092"
+      SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
+      POSTGRES_URL: "jdbc:postgresql://postgres:5432/choreography_saga"
+    depends_on:
+      - db-migrations
+      - kafka-setup
+    restart: on-failure
+
+  pantry:
+    build: ./pantry
+    container_name: pantry
+    hostname: pantry
+    ports:
+      - "8080:8080"
+    environment:
+      KAFKA_URL: "broker:29092"
+      SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
+      POSTGRES_URL: "jdbc:postgresql://postgres:5432/choreography_saga"
+    depends_on:
+      - db-migrations
+      - kafka-setup
+    restart: on-failure
+
